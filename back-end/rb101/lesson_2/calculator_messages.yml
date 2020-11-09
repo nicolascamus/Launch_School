@@ -1,0 +1,68 @@
+# c0 = starts string colorization
+# c1 = ends string colorization
+en:
+  language: "English"
+  welcome: "Welcome to Calculator! Enter your name:"
+  invalid_name: "Please enter a valid name:"
+  greeting: "Hi, "
+  first_number: "What's the first number?"
+  second_number: "What's the second number?"
+  invalid_number: "Not a valid number. Please, try again."
+  operator_prompt: "What %{c0}operation%{c1} would you like to perform?"
+  operator_options:
+    "\x20  %{c0}1%{c1}) add\n
+    \x20 %{c0}2%{c1}) subtract\n
+    \x20 %{c0}3%{c1}) multiply\n
+    \x20 %{c0}4%{c1}) divide"
+  invalid_operator:
+    "Not a valid operator.
+    Choose one of the following %{c0}options%{c1} (numbers):"
+  adding: "Adding"
+  subtracting: "Subtracting"
+  multiplying: "Multiplying"
+  dividing: "Dividing"
+  zero_division: "You tried to divide by zero. Please start again."
+  the_two_numbers: " the two numbers..."
+  result: "The result is "
+  another_calculation: "Do you want to perform another calculation?"
+  options_yes: ["y", "yes"]
+  options_no: ["n", "no"]
+  invalid_answer:
+    "Invalid answer. Please choose one of the following %{c0}options%{c1}:"
+  clear_screen: "Do you want to clear the screen between each calculation?"
+  thanks: "Thank you for using calculator. Good bye!"
+
+es:
+  language: "Español"
+  welcome: "Bienvenido a Calculadora! Por favor ingrese su nombre:"
+  invalid_name: "Por favor ingrese un nombre válido:"
+  greeting: "Hola, "
+  first_number: "¿Cuál es el primer número?"
+  second_number: "¿Cuál es el segundo número?"
+  invalid_number:
+    "El número ingresado no es válido. Por favor intente otra vez:"
+  operator_prompt: "¿Qué tipo de %{c0}operación%{c1} desea realizar?"
+  operator_options:
+    "\x20  %{c0}1%{c1}) sumar\n
+    \x20 %{c0}2%{c1}) restar\n
+    \x20 %{c0}3%{c1}) multiplicar\n
+    \x20 %{c0}4%{c1}) dividir"
+  invalid_operator:
+    "Por favor elija una de las siguientes %{c0}opciones%{c1} (números):"
+  adding: "Sumando"
+  subtracting: "Restando"
+  multiplying: "Multiplicando"
+  dividing: "Dividiendo"
+  zero_division:
+    "Intentó dividir por cero.
+    Por favor vuelva a introducir los números."
+  the_two_numbers: " los números..."
+  result: "El resultado es "
+  another_calculation: "¿Desea realizar otro cálculo?"
+  options_yes: ["s", "si", "sí"]
+  options_no: ["n", "no"]
+  invalid_answer:
+    "Respuesta inválida.
+    Por favor elija una de las siguientes %{c0}opciones%{c1}:"
+  clear_screen: "Desea empezar los nuevos cálculos con la pantalla en blanco?"
+  thanks: "Gracias por usar Calculadora. Adiós!"
