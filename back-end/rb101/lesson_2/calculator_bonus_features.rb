@@ -1,5 +1,8 @@
 require 'yaml'
 
+OPTIONS_COLOR = ["\e[35m", "\e[0m"]
+MESSAGES = YAML.load_file('calculator_messages.yml')
+
 def colorize(string)
   "#{OPTIONS_COLOR[0]}#{string}#{OPTIONS_COLOR[1]}"
 end
@@ -160,15 +163,17 @@ def yes_or_no?(message)
   options_yes.include?(answer)
 end
 
-OPTIONS_COLOR = ["\e[35m", "\e[0m"]
-MESSAGES = YAML.load_file('calculator_messages.yml')
+def display_welcome_and_greeting
+  prompt("welcome")
+
+  name = get_name
+  prompt("greeting", "#{name}!")
+end
 
 clear_screen
 LANGUAGE = set_language
 
-prompt("welcome")
-name = get_name
-prompt("greeting", "#{name}!")
+display_welcome_and_greeting
 
 restart_with_clear_screen = nil
 loop do
