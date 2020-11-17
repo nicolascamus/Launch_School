@@ -30,7 +30,7 @@ en:
   invalid_answer:
     "Invalid answer. Please choose one of the following %{c0}options%{c1}:"
   clear_screen: "Do you want to clear the screen between each calculation?"
-  thanks: "Thank you for using calculator. Good bye!"
+  thanks: "Thank you for using Calculator. Good bye!"
 
 es:
   language: "Español"
