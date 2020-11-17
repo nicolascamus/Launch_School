@@ -1,0 +1,64 @@
+# c0 = starts string colorization
+# c1 = ends string colorization
+# same with b0 and b1, but to convert string to bold; as well as i0 and i1 to
+# convert to italics.
+
+en:
+  language: "English"
+  welcome: Welcome to %{i0}Mortgage Calculator%{i1}!
+  loan_amount: What is the %{b0}loan amount%{b1}?
+  interest_rate: "What is the %{b0}interest rate%{b1} (%%)?"
+  loan_duration: What is the %{b0}loan duration%{b1} (in years)?
+  invalid_input:
+    "Invalid input. Only positive numbers and zero are allowed.\n
+    \x20 Please, try again:"
+  only_positive_numbers:
+    "Invalid input. Only positive numbers are allowed.\n
+    \x20 Please, try again:"
+  invalid_loan_duration:
+    "Invalid duration.\n
+    \x20 If you type a decimal number, make sure it can be converted to months
+    as an integer number.\n
+    \x20 (For example: you can type 0.5 years, which is 6 months; but not 0.6
+    years because it would be 7.2 months)"
+  monthly_payment: "Monthly payment: "
+  payments_total: "Total amount to pay: "
+  interest_total: "Total interest: "
+  another_calculation: "Do you want to perform another calculation?"
+  clear_screen: "Do you want to clear the screen between each calculation?"
+  options_yes: ["y", "yes"]
+  options_no: ["n", "no"]
+  invalid_answer:
+    "Invalid answer. Please choose one of the following %{c0}options%{c1}:"
+  thanks: "Thank you for using %{i0}Mortgage Calculator%{i1}. Good bye!"
+
+es:
+  language: "Español"
+  welcome: "Bienvenido a %{i0}Calculadora de Hipotecas%{i1}!"
+  loan_amount: Cuál es el %{b0}importe del préstamo%{b1}?
+  interest_rate: Cuál es la %{b0}tasa de interés%{b1} (%%)?
+  loan_duration: Cuál es el %{b0}plazo%{b1} (en años)?
+  invalid_input:
+    "El valor ingresado no es válido.
+    Sólo se aceptan números positivos o cero.\n
+    \x20 Por favor vuelva a intentarlo:"
+  only_positive_numbers: "El valor ingresado no es válido.
+    Sólo se aceptan números positivos.\n
+    \x20 Por favor vuelva a intentarlo:"
+  invalid_loan_duration:
+    "Plazo inválido.\n
+    \x20 Si desea usar un número decimal, asegúrese de que pueda ser convertido
+    a meses como número entero.\n
+    \x20 (Por ejemplo: puede usar 0.5 años, que son 6 meses; pero no 0.6 años
+    porque serían 7.2 meses)"
+  monthly_payment: "Pago mensual: "
+  payments_total: "Total a pagar: "
+  interest_total: "Interés total: "
+  another_calculation: "¿Desea realizar otro cálculo?"
+  clear_screen: "Desea empezar los nuevos cálculos con la pantalla en blanco?"
+  options_yes: ["s", "si", "sí"]
+  options_no: ["n", "no"]
+  invalid_answer:
+    "Respuesta inválida.
+    Por favor elija una de las siguientes %{c0}opciones%{c1}:"
+  thanks: "Gracias por usar %{i0}Calculadora de Hipotecas%{i1}. Adiós!"
