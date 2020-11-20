@@ -91,23 +91,24 @@ end
 
 def calculate_results(loan_amount, years, interest_rate)
   months = years * 12
-  annual_interest_rate = interest_rate / 100
-  monthly_interest_rate = annual_interest_rate / 12
-
-  monthly_payment =
-    if interest_rate == 0
-      loan_amount / months
-    else
-      loan_amount * (monthly_interest_rate / (1 -
-        (1 + monthly_interest_rate)**-months))
-    end
-
+  monthly_interest_rate = interest_rate / 100 / 12
+  monthly_payment = calculate_monthly_payment(loan_amount, months,
+                                              monthly_interest_rate)
   payments_total = monthly_payment * months
   interest_total = payments_total - loan_amount
 
   results = [monthly_payment, payments_total, interest_total]
 
   results.map { |item| item.round(2).to_f }
+end
+
+def calculate_monthly_payment(loan_amount, months, monthly_interest_rate)
+  if monthly_interest_rate == 0
+    loan_amount / months
+  else
+    loan_amount * (monthly_interest_rate / (1 -
+      (1 + monthly_interest_rate)**-months))
+  end
 end
 
 def display_results(results_array)
@@ -133,8 +134,8 @@ end
 def separate_thousands(number)
   number_characters = number.to_s.chars
   number_with_separators = []
-
   increase_count = false
+
   count = 1
   number_characters.reverse.each do |character|
     if count % 3 == 0
@@ -147,9 +148,13 @@ def separate_thousands(number)
     increase_count = true if character == '.'
   end
 
-  number_with_separators.pop if number_with_separators[-1] == ","
+  compose_number(number_with_separators)
+end
 
-  correct_punctuation(number_with_separators.reverse.join)
+def compose_number(number_array)
+  number_array.pop if number_array[-1] == ","
+
+  correct_punctuation(number_array.reverse.join)
 end
 
 def correct_punctuation(num_string)
@@ -157,17 +162,17 @@ def correct_punctuation(num_string)
 end
 
 def display_options
-  options_yes = message("options_yes")
-  options_no = message("options_no")
-  "\n   #{colorize(options_yes[0])}) #{options_yes[-1]}"\
-  "\n   #{colorize(options_no[0])}) #{options_no[-1]}"
+  answers = ""
+
+  OPTIONS.each_value do |options|
+    answers << "\n   #{colorize(options[0])}) #{options[-1]}"
+  end
+
+  answers
 end
 
 def yes_or_no?(message)
-  options_yes = message("options_yes")
-  options_no = message("options_no")
-  options = [options_yes, options_no].flatten
-
+  options = [OPTIONS[:yes], OPTIONS[:no]].flatten
   prompt(message, display_options)
 
   answer = ""
@@ -177,11 +182,12 @@ def yes_or_no?(message)
     prompt("invalid_answer", display_options)
   end
 
-  options_yes.include?(answer)
+  OPTIONS[:yes].include?(answer)
 end
 
 clear_screen
 LANGUAGE = get_language
+OPTIONS = { yes: message("options_yes"), no: message("options_no") }
 
 prompt("welcome", "\n ")
 
