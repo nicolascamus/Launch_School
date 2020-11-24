@@ -30,7 +30,7 @@ en:
   options_no: ["n", "no"]
   invalid_answer:
     "Invalid answer. Please choose one of the following %{c0}options%{c1}:"
-  thanks: "Thank you for using %{i0}Mortgage Calculator%{i1}. Good bye!"
+  thanks: "Thank you for using %{i0}Mortgage Calculator%{i1}. Goodbye!"
 
 es:
   language: "Español"
