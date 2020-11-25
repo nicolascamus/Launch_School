@@ -1,0 +1,193 @@
+en:
+  language: English
+  rules:
+    rock:
+      options: [rock, r]
+      beats:
+        scissors: crushes
+        lizard: crushes
+      loses_to:
+        paper: is covered by
+        spock: is vaporized by
+    paper:
+      options: [paper, p]
+      beats:
+        rock: covers
+        spock: disproves
+      loses_to:
+        lizard: is eaten by
+        scissors: is cut by
+    scissors:
+      options: [scissors, sc]
+      beats:
+        lizard: decapitate
+        paper: cut
+      loses_to:
+        rock: are crushed by
+        spock: are smashed by
+    lizard:
+      options: [lizard, l]
+      beats:
+        spock: poisons
+        paper: eats
+      loses_to:
+        rock: is crushed by
+        scissors: is decapitated by
+    spock:
+      options: [Spock, spock, sp, k]
+      beats:
+        rock: vaporizes
+        scissors: smashes
+      loses_to:
+        paper: is disproved by
+        lizard: is poisoned by
+
+  messages:
+    enter_name: "Enter your name:"
+    invalid_name:
+      "Please, enter a name that has between 2 and 20 characters:"
+    computer: "Computer"
+    welcome:
+      "Welcome to %{gn0}Rock, Paper, Scissors, Lizard, Spock%{gn1}!"
+    show_rules: Would you like to read the rules before starting?
+    press_enter: "Ready? Press %{o0}Enter%{o1} to continue:"
+    options_yes: ["y", "yes"]
+    options_no: ["n", "no"]
+    invalid_answer: "Choose one of the following %{o0}options%{o1}:"
+    select_move: "Choose a %{o0}move%{o1}:"
+    invalid_choice: "You didn't choose a valid %{o0}option%{o1},"
+    try_again: "try again:"
+    won_round: "%{w0}You won this round!%{w1}"
+    lost_round: "%{d0}The computer won this round.%{d1}"
+    tie: "%{t0}It's a tie!%{t1}"
+    computer_wins: "%{d0}~ The computer won the match ~%{d1}"
+    user_wins: "%{w0}~ You won the match! ~%{w1}"
+    play_again: "Do you want to play again?"
+    great_match: What a great match,
+    goodbye: Goodbye :)
+    rules:
+      ~ Read as "A defeats B" ~
+
+
+      ·Scissors cut Paper
+
+      ·Paper covers Rock
+
+      ·Rock crushes Lizard
+
+      ·Lizard poisons Spock
+
+      ·Spock smashes Scissors
+
+      ·Scissors decapitate Lizard
+
+      ·Lizard eats Paper
+
+      ·Paper disproves Spock
+
+      ·Spock vaporizes Rock
+
+      ·Rock crushes Scissors
+
+
+      -Players get %{points_prw} point%{plural_pprw} per round won.
+
+      -The first player to reach %{w0}%{winning_score} point%{plural_ws}%{w1}
+      wins the match.
+
+es:
+  language: Español
+  rules:
+    rock:
+      options: [piedra, r, pi]
+      beats:
+        scissors: aplasta las
+        lizard: aplasta a
+      loses_to:
+        paper: es envuelta por
+        spock: es vaporizada por
+    paper:
+      options: [papel, pa]
+      beats:
+        rock: cubre a
+        spock: desmiente a
+      loses_to:
+        lizard: es devorado por
+        scissors: es cortado por
+    scissors:
+      options: [tijeras, t]
+      beats:
+        lizard: decapitan a
+        paper: cortan
+      loses_to:
+        rock: son aplastadas por
+        spock: son destruidas por
+    lizard:
+      options: [lagarto, lagartija, l]
+      beats:
+        spock: envenena a
+        paper: se come el
+      loses_to:
+        rock: es aplastado por
+        scissors: es decapitado por
+    spock:
+      options: [Spock, spock, sp, s]
+      beats:
+        rock: vaporiza la
+        scissors: rompe las
+      loses_to:
+        paper: es desmentido por
+        lizard: es envenenado por
+
+  messages:
+    enter_name: "Ingresa tu nombre:"
+    invalid_name:
+      "Por favor ingrese un nombre con al menos 2 caracteres y máximo 20:"
+    computer: "Computadora"
+    welcome:
+      "¡Bienvenido a %{gn0}Piedra, Papel, Tijeras, Lagarto, Spock%{gn1}!"
+    show_rules: Deseas ver las reglas antes de comenzar?
+    press_enter: "¿Listo? Presiona %{o0}Enter%{o1} para continuar:"
+    options_yes: ["s", "si", "sí"]
+    options_no: ["n", "no"]
+    invalid_answer: "Elige una de las siguientes %{o0}opciones%{o1}:"
+    select_move: "Elige una %{o0}jugada%{o1}:"
+    invalid_choice: "No has elegido una %{o0}opción%{o1} válida,"
+    try_again: "vuelve a intentarlo:"
+    won_round: "%{w0}¡Has ganado esta ronda!%{w1}"
+    lost_round: "%{d0}La computadora ganó esta ronda.%{d1}"
+    tie: "%{t0}¡Empate!%{t1}"
+    computer_wins: "%{d0}~ La computadora ganó la partida ~%{d1}"
+    user_wins: "%{w0}~ ¡Ganaste la partida! ~%{w1}"
+    play_again: "Quieres volver a jugar?"
+    great_match: ¡Qué buena partida,
+    goodbye: Adiós :)
+    rules:
+      ~ Léase como "A le gana a B" ~
+
+
+      ·Tijeras cortan papel
+
+      ·Papel cubre piedra
+
+      ·Piedra aplasta a lagarto
+
+      ·Lagarto envenena a Spock
+
+      ·Spock destruye las tijeras
+
+      ·Tijeras decapitan lagarto
+
+      ·Lagarto se come el papel
+
+      ·Papel desmiente a Spock
+
+      ·Spock vaporiza a piedra
+
+      ·Piedra aplasta las tijeras
+
+
+      -Los jugadores obtienen %{points_prw} punto%{plural_pprw} por ronda ganada.
+
+      -El primer jugador en llegar a %{w0}%{winning_score}
+      punto%{plural_ws}%{w1} gana la partida.
