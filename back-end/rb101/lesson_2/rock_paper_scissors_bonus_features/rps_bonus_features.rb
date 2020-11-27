@@ -155,6 +155,28 @@ def animate_middle_string(array_of_strings, character_time: 0.021,
     display_versus_animation(first_static_string, second_static_string)
   end
 
+  display_string_animation(first_static_string, string_to_animate,
+                           second_static_string, character_time, show_score)
+end
+
+def display_versus_animation(user_choice, computer_choice)
+  versus_time = 0.33
+  character_time = 0.03
+  animation_chars = %w[O o • · -]
+
+  display_score
+  puts user_choice + bold("VS") + computer_choice
+  sleep(versus_time)
+
+  animation_chars.each do |char|
+    display_score
+    puts user_choice + bold(char) + computer_choice
+    sleep(character_time)
+  end
+end
+
+def display_string_animation(first_static_string, string_to_animate,
+                             second_static_string, character_time, show_score)
   skip_sleep = false
   animated_string = ""
 
@@ -174,22 +196,6 @@ def skip_sleep?(acual_state, character, animated_string)
   previous_character = animated_string[-1]
 
   acual_state ? previous_character != "m" : character == "\e"
-end
-
-def display_versus_animation(user_choice, computer_choice)
-  versus_time = 0.33
-  character_time = 0.03
-  animation_chars = %w[O o • · -]
-
-  display_score
-  puts user_choice + bold("VS") + computer_choice
-  sleep(versus_time)
-
-  animation_chars.each do |char|
-    display_score
-    puts user_choice + bold(char) + computer_choice
-    sleep(character_time)
-  end
 end
 
 def display_score(phrase = false)
