@@ -1,0 +1,75 @@
+welcome_and_instructions:
+  "Welcome to %{i0}%{b0}Tic Tac Toe%{b1}%{i1}!
+
+  \nIn this customizable version of the game, you can choose:
+  \n  1) the size of the board
+  \n     %{d0}from %{i0}%{min_board_size}%{i1} to
+  %{i0}%{max_board_size}%{i1} (inclusive)%{d1}
+  \n  2) how many consecutive squares in a line (row, column, or diagonal)
+  players have to mark to win
+  \n     %{d0}setting available from %{i0}%{customizable_min_size}%{i1}
+   boards onwards%{d1}
+  \n  3) the amount of players (between users and computers)
+  \n     %{d0}depends on settings %{i0}1)%{i1} and %{i0}2)%{i1}%{d1}
+  \n "
+rounds_to_win: "The first player to win %{winning_score} rounds wins the match."
+continue: "Ready? Press %{r0}Enter%{r1} to continue"
+choose_board_size: "Choose a board size:"
+invalid_option: "Not a valid %{b0}option%{b1}, please try again."
+winning_line_length:
+  "How many consecutive squares in a line do players have to mark to win?"
+settings:
+  "Board size: %{size}x%{size}
+  \n%{indentation}Number of consecutive squares to mark in a line to win:
+  %{consecutive_squares}"
+max_amount_of_players:
+  "%{only_upto} %{b0}%{amount}%{b1} players (between users and computers)
+  can play with these settings."
+only: Only
+up_to: Up to
+users_amount: "How many users will play?"
+computers_amount: "How many computers will play?"
+out_of_range:
+  "Invalid input. Please choose %{between}%{b0}%{min_num}%{b1}
+   %{and_or} %{b0}%{max_num}%{b1}:"
+between: between
+integer_between: an integer between
+enter_name: Enter the name of user number
+name_of_one_user: What's the name of the user?
+name_taken: Name already taken, please try with another.
+marking_characters:
+  "Enter the character(s) that %{b0}%{player_name}%{b1} will use to
+   to mark the squares on the board"
+marker_example:
+  "(For example: %{i0}X%{i1}, %{i0}O%{i1}, or a person's initials)"
+mark_taken: Marker already taken, please try again.
+invalid_chars:
+      "Not a valid %{type}. Please enter %{b0}%{min_num}%{b1}
+      %{to_or} %{b0}%{max_num}%{b1} characters.
+      \n%{indentation}(numbers and escape sequences are not allowed)."
+mark: marker
+name: name
+and: and
+or: or
+to: to
+cant_contain_computer:
+  "The name can't contain the word \"computer\""
+computer_name: "Computer"
+who_starts: Who will be the first to mark a square?
+who_plays_next: Who will be the next to mark a square?
+choose_square: Enter a square number,
+invalid_square_number:
+  "Invalid square number,
+  please enter one of the numbers shown on the board"
+tie: It's a tie
+won_this_round: "%{b0}%{player_name}%{b1} won this round!"
+won_the_match: "%{b0}%{player_name}%{b1} won the match!"
+player: Player
+score: Score
+next_round: Press %{r0}Enter%{r1} to reset the board and play the next round
+options_yes: ["y", "yes"]
+options_no: ["n", "no"]
+invalid_answer:
+    "Invalid answer. Please choose one of the following %{b0}options%{b1}:"
+play_again: "Do you want to play again?"
+goodbye: "Well played!\n%{indentation}Goodbye :)\n "
