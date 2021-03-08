@@ -1,21 +1,27 @@
 require 'yaml'
+require 'io/console'
+require 'timeout'
 
 MESSAGES = YAML.load_file('tic_tac_toe_messages.yml')
 
-WINNING_SCORE = 5
+ROUNDS_TO_WIN = 5
 MIN_BOARD_SIZE = 3
-MAX_BOARD_SIZE = 9
 MIN_WINNING_LINE_LENGTH = 4
+MARKING_CHARS_MAX_AMOUNT = 2
 
 SQUARE_WIDTH = 8
 SQUARE_HEIGHT = 3
 EMPTY_SPACE = " " * SQUARE_WIDTH
 
 PROMPT = "=> "
+PROMPT_LENGTH = PROMPT.size
 BOLD = ["\e[1m", "\e[22m"]
 DIM = ["\e[2m", "\e[22m"]
 ITALIC = ["\e[3m", "\e[23m"]
 REVERSE_COLORS = ["\e[7m", "\e[27m"]
+DECORATION_LENGTH = DIM.join.size
+OPTION_INDICATOR = ") "
+OPTION_INDICATOR_SIZE = OPTION_INDICATOR.size
 
 def bold(string)
   colorize(BOLD, string)
@@ -37,8 +43,8 @@ def colorize(color_array, string)
   color_array[0] + string + color_array[1]
 end
 
-def message(key, string_formatter: {})
-  string = MESSAGES[key]
+def message(key, string_formatter: {}, location: MESSAGES)
+  string = location[key]
   string_format = STRING_FORMAT.merge(string_formatter)
 
   string.include?("%{") ? format(string, string_format) : string
@@ -50,7 +56,7 @@ def prompt(key, additional_string = "", new_screen: false, string_formatter: {})
 
   clear_screen if new_screen
 
-  puts prompt_message
+  puts split_string_to_fit_window(prompt_message, indent: PROMPT_LENGTH)
 end
 
 def clear_screen
@@ -58,10 +64,69 @@ def clear_screen
 end
 
 def align_to_prompt(string, leading_newline: true)
-  spaces = " " * PROMPT.length
+  spaces = " " * PROMPT_LENGTH
   new_string = spaces + string
 
   leading_newline ? "\n" + new_string : new_string
+end
+
+def split_string_to_fit_window(string, indent: 0, left_margin: 0)
+  window_width = IO.console.winsize[1] - 1
+  lines_and_lengths =
+    string.split("\n").map { |line| [line, amount_of_characters(line)] }
+
+  return string if string_fits?(left_margin, lines_and_lengths, window_width)
+
+  indentation = " " * (indent + left_margin)
+
+  formatted_lines(lines_and_lengths, indentation, window_width, left_margin)
+end
+
+def amount_of_characters(string)
+  extra_amount = string.include?(" ") ? 0 : 1
+  text = string.include?("\e") ? string.gsub(/\e\[(\d+)m/, '') : string
+
+  text.size + extra_amount
+end
+
+def string_fits?(left_margin, lines_and_lengths, width)
+  left_margin.zero? && lines_and_lengths.all? { |(_, length)| length <= width }
+end
+
+def formatted_lines(lines_and_lengths, indentation, window_width, left_margin)
+  lines_and_lengths.map do |line, line_length|
+    if line_length + left_margin <= window_width
+      " " * left_margin + line
+    else
+      words = line.split(/ /)
+
+      compose_lines(words, indentation, window_width, left_margin)
+    end
+  end
+end
+
+def compose_lines(words, indentation, max_length, line_length)
+  new_line = first_line(line_length)
+  lines = []
+
+  words.each do |word|
+    length_of_word = amount_of_characters(word)
+
+    if line_length + length_of_word - 1 > max_length
+      lines << new_line.join(" ")
+      new_line = ["#{indentation}#{word}"]
+      line_length = amount_of_characters(new_line[0]) + 1
+    else
+      new_line << word
+      line_length += length_of_word
+    end
+  end
+
+  lines + [new_line.join(" ")]
+end
+
+def first_line(first_line_length)
+  first_line_length < 1 ? [] : [" " * (first_line_length - 1)]
 end
 
 def board_size_string(size)
@@ -69,13 +134,36 @@ def board_size_string(size)
 end
 
 def display_welcome_and_overview
+  is_customizable_on_every_board = MIN_BOARD_SIZE > MIN_WINNING_LINE_LENGTH
+  first_separation, second_separation =
+    is_customizable_on_every_board ? [2, 1] : [1, 2]
+
   clear_screen
-  puts message("welcome_and_instructions")
-  puts message("rounds_to_win") if WINNING_SCORE > 1
+  display_message("welcome_and_overview")
 
-  2.times { puts }
+  MESSAGES['customizable_aspects'].each do |number, parts|
+    display_message('description', left_margin: 2, indent: 3, location: parts)
 
+    next puts if number == 'number2' && is_customizable_on_every_board
+    display_message('additional_info', left_margin: 5, location: parts)
+  end
+
+  display_blank_lines(first_separation)
+  display_message("rounds_to_win") if ROUNDS_TO_WIN > 1
+
+  display_blank_lines(second_separation)
   press_enter_to_continue("continue")
+end
+
+def display_message(key, format: {}, left_margin: 0, indent: 0,
+                    location: MESSAGES)
+  string = message(key, location: location, string_formatter: format)
+  puts split_string_to_fit_window(string, left_margin: left_margin,
+                                          indent: indent)
+end
+
+def display_blank_lines(amount)
+  amount.times { puts }
 end
 
 def press_enter_to_continue(message)
@@ -87,35 +175,85 @@ def press_enter_to_continue(message)
 end
 
 def set_board_size
-  range = (MIN_BOARD_SIZE..MAX_BOARD_SIZE)
-  options = range.map { |number| [number.to_s, "#{number}x#{number}"] }
+  refresh_list_key = "r"
 
-  prompt('choose_board_size', options_list(options), new_screen: true)
+  loop do
+    max_board_size = calculate_max_board_size
+    range = (MIN_BOARD_SIZE..max_board_size)
 
-  select_option(options).to_i
+    next request_window_resizing if range.size < 1
+
+    sizes = range.map { |number| [number.to_s, "#{number}x#{number}"] }
+    options = sizes + [refresh_list_key]
+
+    prompt('choose_board_size', create_options_list(sizes), new_screen: true)
+    display_message("note", left_margin: PROMPT_LENGTH)
+
+    chosen_option = select_option(options)
+    return chosen_option.to_i unless chosen_option == refresh_list_key
+  end
 end
 
-def options_list(options)
+def calculate_max_board_size
+  height, width = IO.console.winsize
+
+  height_max_board_size = (height - 2) / (SQUARE_HEIGHT + 1)
+  width_max_board_size = (width + 1) / (SQUARE_WIDTH + 1)
+
+  [height_max_board_size, width_max_board_size].min
+end
+
+def request_window_resizing
+  prompt('enlarge_window', new_screen: true)
+  print "\e7" # save cursor position
+
+  loop do
+    break if calculate_max_board_size >= MIN_BOARD_SIZE
+    sleep 0.3
+    print "\e8" # restore cursor position
+  end
+
+  absorb_useless_input
+end
+
+def absorb_useless_input
+  loop do
+    input =
+      begin
+        Timeout.timeout(0.0003) { gets.chomp }
+      rescue Timeout::Error
+        nil
+      end
+
+    break if input.nil?
+  end
+end
+
+def create_options_list(options)
+  max_option_size = options.map { |option| option[0].size }.max
+  decorated_option_size =
+    max_option_size + DECORATION_LENGTH + OPTION_INDICATOR_SIZE
   list = ""
 
-  options.each do |abbreviation, option|
-    list << align_to_prompt("#{bold(abbreviation)}) #{option}")
+  options.each do |option, description|
+    decorated_option = bold_option(option, decorated_option_size, description)
+    list << align_to_prompt(decorated_option)
   end
 
   list
 end
 
-def clean_whitespaces(string, separator = " ")
-  string.split.join(separator)
-end
-
 def select_option(options)
   loop do
-    choice = clean_whitespaces(gets.chomp, "").downcase
+    choice = clean_whitespaces(gets.chomp, "").downcase.delete("\"'")
 
     return choice if options.flatten.include?(choice)
     prompt("invalid_option")
   end
+end
+
+def clean_whitespaces(string, separator = " ")
+  string.split.join(separator)
 end
 
 def get_integer(message, range, new_screen: false)
@@ -124,7 +262,7 @@ def get_integer(message, range, new_screen: false)
 
   integer = nil
   loop do
-    integer = gets.chomp
+    integer = clean_whitespaces(gets.chomp)
     integer = integer.to_i if valid_integer?(integer)
     break if range.include?(integer)
 
@@ -398,16 +536,26 @@ def get_name(player_number, used_names, total)
     prompt("enter_name", " #{player_number}", new_screen: true)
   end
 
-  get_input("name", (3..20), used_names)
+  get_input("name", (3..MAX_NAME_LENGTH), used_names)
+end
+
+def set_max_name_lenght
+  max_chars_used_by_mark = " ()".size + MARKING_CHARS_MAX_AMOUNT
+  second_width = cell_width("score")
+  board_width = table_horizontal_line(first_width: max_chars_used_by_mark,
+                                      second_width: second_width).size
+  available_space = IO.console.winsize[1] - board_width
+
+  [available_space, 20].min
 end
 
 def get_marking_chars(player_name, used_marks)
   formatter = { player_name: player_name }
 
   prompt('marking_characters', string_formatter: formatter, new_screen: true)
-  puts align_to_prompt(message("marker_example"), leading_newline: false)
+  display_message("marker_example", left_margin: PROMPT_LENGTH)
 
-  get_input("mark", (1..2), used_marks)
+  get_input("mark", (1..MARKING_CHARS_MAX_AMOUNT), used_marks)
 end
 
 def get_input(type, range, used_strings)
@@ -465,27 +613,51 @@ def set_turns
 end
 
 def display_players_list(available_players)
-  all_players = PLAYERS.keys
-  players_list = []
+  max_option_size = PLAYER_NAMES.size.to_s.size + OPTION_INDICATOR_SIZE
+  decorated_option_size = max_option_size + DECORATION_LENGTH
+  players_list = ""
 
-  all_players.each_with_index do |name, index|
+  PLAYER_NAMES.each_with_index do |name, index|
     option_number = (index + 1).to_s
     decorated_text =
-      if available_players.index(name).nil?
-        dim("#{option_number}) #{name}")
-      else
-        "#{bold(option_number)}) #{name}"
-      end
+      decorate_option_by_availability(name, available_players, option_number,
+                                      max_option_size, decorated_option_size)
 
-    players_list << align_to_prompt(decorated_text, leading_newline: false)
+    players_list << "#{decorated_text}\n"
   end
 
-  puts players_list
+  puts split_string_to_fit_window(players_list, left_margin: PROMPT_LENGTH,
+                                                indent: max_option_size)
+end
+
+def decorate_option_by_availability(item, available_items, option_number,
+                                    max_option_size, decorated_option_size)
+  if item_already_used?(item, available_items)
+    dim_option(option_number, max_option_size, item)
+  else
+    bold_option(option_number, decorated_option_size, item)
+  end
+end
+
+def item_already_used?(item, available_items)
+  available_items.index(item).nil?
+end
+
+def dim_option(option_number, max_option_size, item)
+  number = option_number + OPTION_INDICATOR
+
+  dim(number.ljust(max_option_size) + item)
+end
+
+def bold_option(option_number, decorated_option_size, item)
+  decorated_number = bold(option_number) + OPTION_INDICATOR
+
+  decorated_number.ljust(decorated_option_size) + item
 end
 
 def transfer_player_between_arrays!(available_players, playing_order)
   loop do
-    choice = selected_player(gets.chomp, available_players)
+    choice = selected_player(clean_whitespaces(gets.chomp), available_players)
 
     next prompt('invalid_option') if choice.nil?
 
@@ -499,7 +671,8 @@ def selected_player(choice, available_choices)
   return nil if choice == ""
 
   if valid_integer?(choice)
-    player_name = PLAYERS.keys[choice.to_i - 1]
+    return nil if choice.to_i == 0
+    player_name = PLAYER_NAMES[choice.to_i - 1]
 
     available_choices.index(player_name) ? player_name : nil
   else
@@ -511,7 +684,7 @@ end
 def initialize_decorations_hash
   decorations_by_player = Hash.new { |hash, key| hash[key] = {} }
 
-  PLAYERS.keys.each do |player|
+  PLAYER_NAMES.each do |player|
     ["dim", "bold"].each do |decoration|
       decorations_by_player[player][decoration] =
         decorated_name_and_mark(player, decoration)
@@ -619,37 +792,40 @@ def cell_width(column_name)
   header_length = message(column_name).length
   items_max_length =
     case column_name
-    when "player" then max_player_name_length
-    when "score"  then WINNING_SCORE.to_s.length
+    when "player" then find_max_player_name_length
+    when "score"  then ROUNDS_TO_WIN.to_s.length
     end
 
   [header_length, items_max_length].max
 end
 
-def max_player_name_length
+def find_max_player_name_length
   decoration_length = dim("").size
   lengths =
-    PLAYERS.keys.map do |name, _|
+    PLAYER_NAMES.map do |name, _|
       PLAYER_DECORATIONS[name]["dim"].size - decoration_length
     end
 
   lengths.max
 end
 
-def score_header(first_length, second_length)
+def score_header(first_length, second_length, include_horizontal_line: true)
   first_item_centered = header_text("player", first_length)
   second_item_centered = header_text("score", second_length)
 
-  "\n  " + first_item_centered + " | " + second_item_centered + "  \n" +
-    SCOREBOARD_HORIZONATL_LINE
+  header = "\n  " + first_item_centered + " | " + second_item_centered + "  \n"
+
+  return header unless include_horizontal_line
+  header + SCOREBOARD_HORIZONATL_LINE
 end
 
 def header_text(title, length)
   italic(message(title)).center(length + italic("").length)
 end
 
-def table_horizontal_line
-  "+--" + cell_line(FIRST_COLUMN_WIDTH) + "--" + cell_line(SECOND_COLUMN_WIDTH)
+def table_horizontal_line(first_width: FIRST_COLUMN_WIDTH,
+                          second_width: SECOND_COLUMN_WIDTH)
+  "+--" + cell_line(first_width) + "--" + cell_line(second_width)
 end
 
 def cell_line(length)
@@ -1119,25 +1295,15 @@ def display_winner_and_scores(winner, scores)
 end
 
 def match_ended?(scores)
-  scores.values.include?(WINNING_SCORE)
+  scores.values.include?(ROUNDS_TO_WIN)
 end
 
 def play_again?
   options = VALID_ANSWERS.values
 
-  prompt('play_again', options_list(options))
+  prompt('play_again', create_options_list(options))
 
   VALID_ANSWERS[:yes].include?(select_option(options))
-end
-
-def valid_answers_list
-  answers = ""
-
-  VALID_ANSWERS.each_value do |options|
-    answers << align_to_prompt("#{bold(options[0])}) #{options[-1]}")
-  end
-
-  answers
 end
 
 STRING_FORMAT = {
@@ -1149,11 +1315,10 @@ STRING_FORMAT = {
   i1: ITALIC[1],
   r0: REVERSE_COLORS[0],
   r1: REVERSE_COLORS[1],
-  indentation: " " * PROMPT.size,
+  indentation: " " * PROMPT_LENGTH,
   min_board_size: board_size_string(MIN_BOARD_SIZE),
-  max_board_size: board_size_string(MAX_BOARD_SIZE),
-  customizable_min_size: board_size_string(MIN_WINNING_LINE_LENGTH + 1),
-  winning_score: WINNING_SCORE
+  winning_score: ROUNDS_TO_WIN,
+  customizable_min_size: board_size_string(MIN_WINNING_LINE_LENGTH + 1)
 }
 
 display_welcome_and_overview
@@ -1166,10 +1331,12 @@ COLUMNS = board_columns_array
 DIAGONALS = board_diagonals_array
 AVAILABLE_SQUARES = ROWS.flatten
 
+MAX_NAME_LENGTH = set_max_name_lenght
 USERS = {}
 COMPUTERS = {}
 set_players!
 PLAYERS = COMPUTERS.merge(USERS)
+PLAYER_NAMES = PLAYERS.keys
 PLAYING_ORDER = set_turns
 PLAYERS_MARKS = PLAYERS.values
 

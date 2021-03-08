@@ -1,20 +1,34 @@
-welcome_and_instructions:
+welcome_and_overview:
   "Welcome to %{i0}%{b0}Tic Tac Toe%{b1}%{i1}!
 
-  \nIn this customizable version of the game, you can choose:
-  \n  1) the size of the board
-  \n     %{d0}from %{i0}%{min_board_size}%{i1} to
-  %{i0}%{max_board_size}%{i1} (inclusive)%{d1}
-  \n  2) how many consecutive squares in a line (row, column, or diagonal)
-  players have to mark to win
-  \n     %{d0}setting available from %{i0}%{customizable_min_size}%{i1}
-   boards onwards%{d1}
-  \n  3) the amount of players (between users and computers)
-  \n     %{d0}depends on settings %{i0}1)%{i1} and %{i0}2)%{i1}%{d1}
-  \n "
+  \nIn this customizable version of the game, you can choose:"
+customizable_aspects:
+  number1:
+    description: "1) the size of the board"
+    additional_info:
+      "%{d0}sizes range from %{i0}%{min_board_size}%{i1} to the largest size
+      that fits in your terminal window%{d1}"
+  number2:
+    description:
+      "2) how many consecutive squares in a line (row, column, or diagonal)
+      players have to mark to win"
+    additional_info:
+      "%{d0}setting available from %{i0}%{customizable_min_size}%{i1} boards
+      onwards%{d1}"
+  number3:
+    description:
+      "3) the amount of players (between users and computers)"
+    additional_info:
+      "%{d0}depends on settings %{i0}1)%{i1} and %{i0}2)%{i1}%{d1}"
+
 rounds_to_win: "The first player to win %{winning_score} rounds wins the match."
 continue: "Ready? Press %{r0}Enter%{r1} to continue"
+enlarge_window:
+  "Your terminal window is too small. Please enlarge it to continue."
 choose_board_size: "Choose a board size:"
+note:
+  "\n%{d0}Note: you can enlarge your terminal window and enter
+  %{i0}\"r\"%{i1} to see more board size options%{d1}"
 invalid_option: "Not a valid %{b0}option%{b1}, please try again."
 winning_line_length:
   "How many consecutive squares in a line do players have to mark to win?"
@@ -60,7 +74,7 @@ who_plays_next: Who will be the next to mark a square?
 choose_square: Enter a square number,
 invalid_square_number:
   "Invalid square number,
-  please enter one of the numbers shown on the board"
+  please enter one of the numbers displayed on the board"
 tie: It's a tie
 won_this_round: "%{b0}%{player_name}%{b1} won this round!"
 won_the_match: "%{b0}%{player_name}%{b1} won the match!"
