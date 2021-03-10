@@ -1,3 +1,7 @@
+update_ruby:
+  "This game requires %{b0}Ruby %{min_version}%{b1} or higher.
+  \n\n%{indentation}Please update Ruby to continue.
+  \n%{indentation}%{d0}Your current Ruby version: %{user_version}%{d1}"
 welcome_and_overview:
   "Welcome to %{i0}%{b0}Tic Tac Toe%{b1}%{i1}!
 

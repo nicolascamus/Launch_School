@@ -23,6 +23,19 @@ DECORATION_LENGTH = DIM.join.size
 OPTION_INDICATOR = ") "
 OPTION_INDICATOR_SIZE = OPTION_INDICATOR.size
 
+def check_ruby_version(version)
+  required_version = Gem::Version.new(version)
+  users_version = Gem::Version.new(RUBY_VERSION)
+
+  return if users_version >= required_version
+
+  clear_screen
+  prompt("update_ruby", string_formatter: { min_version: version,
+                                            user_version: users_version })
+  sleep 3
+  abort
+end
+
 def bold(string)
   colorize(BOLD, string)
 end
@@ -305,7 +318,7 @@ def set_winning_line_length
   end
 end
 
-def board_rows_array
+def create_board_rows_array
   board = []
   number_of_squares = SQUARES_PER_ROW**2
 
@@ -321,13 +334,13 @@ def board_rows_array
   board
 end
 
-def board_columns_array
+def create_board_columns_array
   ROWS.map.with_index do |_, index|
     ROWS.map { |row| row[index] }.flatten
   end
 end
 
-def board_diagonals_array
+def create_board_diagonals_array
   amount_per_direction_at_top = SQUARES_PER_ROW - WINNING_LINE_LENGTH + 1
   diagonals_amount = (1 + (amount_per_direction_at_top - 1) * 2) * 2
   diagonals = []
@@ -378,7 +391,7 @@ def mirror_index(index)
   -(index + 1)
 end
 
-def board_horizontal_divisor
+def create_board_horizontal_divisor
   line = "-" * SQUARE_WIDTH
   divisor = ""
 
@@ -1321,14 +1334,16 @@ STRING_FORMAT = {
   customizable_min_size: board_size_string(MIN_WINNING_LINE_LENGTH + 1)
 }
 
+check_ruby_version('2.7.0')
+
 display_welcome_and_overview
 
 SQUARES_PER_ROW = set_board_size
 WINNING_LINE_LENGTH = set_winning_line_length
 
-ROWS = board_rows_array
-COLUMNS = board_columns_array
-DIAGONALS = board_diagonals_array
+ROWS = create_board_rows_array
+COLUMNS = create_board_columns_array
+DIAGONALS = create_board_diagonals_array
 AVAILABLE_SQUARES = ROWS.flatten
 
 MAX_NAME_LENGTH = set_max_name_lenght
@@ -1337,14 +1352,14 @@ COMPUTERS = {}
 set_players!
 PLAYERS = COMPUTERS.merge(USERS)
 PLAYER_NAMES = PLAYERS.keys
-PLAYING_ORDER = set_turns
 PLAYERS_MARKS = PLAYERS.values
+PLAYING_ORDER = set_turns
 
 POSSIBLE_WINNING_LINES = initialize_possible_winning_lines
 POSSIBLE_WINNING_LINES_BY_PLAYER = initialize_lines_that_player_may_win
 
 HEIGHT_FILLER = (1...SQUARES_PER_ROW).map { |_| EMPTY_SPACE + "|" }.join
-GAME_BOARD_HORIZONTAL_LINE = board_horizontal_divisor
+GAME_BOARD_HORIZONTAL_LINE = create_board_horizontal_divisor
 GAME_BOARD_STRING = ROWS.map { |row| create_row_string(row) }
 
 PLAYER_DECORATIONS = initialize_decorations_hash
