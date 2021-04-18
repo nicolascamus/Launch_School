@@ -271,7 +271,9 @@ end
 
 def get_integer(message, range, new_screen: false)
   return range.max if range.size == 1
-  prompt(message, new_screen: new_screen)
+
+  format_hash = compose_format_hash(range, "integer_")
+  prompt(message, new_screen: new_screen, string_formatter: format_hash)
 
   integer = nil
   loop do
@@ -279,7 +281,6 @@ def get_integer(message, range, new_screen: false)
     integer = integer.to_i if valid_integer?(integer)
     break if range.include?(integer)
 
-    format_hash = compose_format_hash(range, "integer_")
     prompt("out_of_range", string_formatter: format_hash)
   end
 

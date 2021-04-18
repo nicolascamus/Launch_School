@@ -35,7 +35,9 @@ note:
   %{i0}\"r\"%{i1} to see more board size options%{d1}"
 invalid_option: "Not a valid %{b0}option%{b1}, please try again."
 winning_line_length:
-  "How many consecutive squares in a line do players have to mark to win?"
+  "How many consecutive squares in a line do players have to mark to win?
+  \n%{indentation}%{d0}(Choose %{between}%{b0}%{min_num}%{b1}%{d0}
+  %{and_or} %{b0}%{max_num}%{b1}%{d0})%{d1}"
 settings:
   "Board size: %{size}x%{size}
   \n%{indentation}Number of consecutive squares to mark in a line to win:
