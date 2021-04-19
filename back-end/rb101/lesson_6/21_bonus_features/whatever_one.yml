@@ -1,0 +1,47 @@
+welcome:
+  "Welcome to %{i0}%{b0}%{game_name}%{b1}%{i1}!
+  \n%{indentation}The first to win %{rounds_to_win} rounds, wins the match."
+ready?: "Ready? Press %{r0}Enter%{r1} to continue"
+enlarge_window:
+  "Your terminal window is too small. Please enlarge it to continue."
+dealer: Dealer
+player: Player
+rounds_won: "%{i0}Rounds won%{i1}"
+dealer_cards: "Dealer cards:"
+player_cards: "Your cards:"
+hit_or_stay: "Do you want to %{b0}H%{b1}it or %{b0}S%{b1}tay?"
+invalid_option: "Not a valid %{b0}option%{b1}, please try again."
+stay: ['stay', 's']
+valid_hit_stay: ['hit', 'h', 'stay', 's']
+options_yes: ["y", "yes"]
+options_no: ["n", "no"]
+next_round: Press %{r0}Enter%{r1} to return cards and play the next round
+player_won_this_round:
+  You won this round with %{b0}%{winner}%{b1} points
+  over %{b0}%{loser}%{b1} points.
+dealer_won_this_round:
+  The dealer won this round with %{b0}%{winner}%{b1} points
+  over %{b0}%{loser}%{b1} points.
+tie: "It's a tie (%{b0}%{points}%{b1} poins each)"
+player_won_the_match:
+  "You have %{b0}%{winner}%{b1} and the dealer has %{b0}%{loser}%{b1} points.
+   \n%{indentation}You won the match! \n "
+dealer_won_the_match:
+  "The dealer has %{b0}%{winner}%{b1} points
+  and you have %{b0}%{loser}%{b1} points.
+   \n%{indentation}The dealer won the match. \n "
+player_busted_round:
+  "You busted with %{b0}%{points}%{b1} points!
+   \n%{indentation}The dealer won this round. \n "
+dealer_busted_round:
+  "Dealer busted with %{b0}%{points}%{b1} points.
+   \n%{indentation}You won this round! \n "
+player_busted_match:
+  "You busted with %{b0}%{points}%{b1} points.
+   \n%{indentation}The dealer won this round. \n "
+dealer_busted_match:
+  "Dealer busted with %{b0}%{points}%{b1} points.
+   \n%{indentation}You won the match! \n "
+dealers_turn: "%{b0}Dealer's turn...%{b1}"
+play_again: Do you want to play again?
+goodbye: "Well played!\n%{indentation}Goodbye :)\n "
